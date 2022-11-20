@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./UWID.sol";
 
 contract UWMajor is Ownable, ERC721 {
 
@@ -22,8 +23,8 @@ contract UWMajor is Ownable, ERC721 {
         _;
     }
 
-    function mint(address to, uint256 uwid) external onlyOwner onlyUWAccounts(to) onlyNotInThisMajor(to) {
-        _safeMint(to, uwid);
+    function mint(address to) external onlyOwner onlyUWAccounts(to) onlyNotInThisMajor(to) {
+        _safeMint(to, UWID(UWIDContractAddress).accountTokenId(to));
     }
 
     function _transfer(

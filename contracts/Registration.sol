@@ -21,18 +21,28 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
 
     uint256 public maxAllowedCredits = 20;
 
+    string public quarterName;
+
+    struct ClassTime {
+        // time/100 = hours time % 100 = minutes
+        // example 1430 -> 2:30pm
+        uint256 startTime; 
+        uint256 endTime;
+    }
+
     struct Class {
         uint256 classId;
         string className;
         uint256 enrollCapacity;
         uint256 credits;
         string creditType;
+
         // account lists
         address[] classAccounts;
         //MajorNFT addresses
         address[] classMajorRestrictions;
-        uint256 startTime;
-        uint256 endTime;
+        // 0 ~ 6 <-> Monday ~ Sunday
+        ClassTime[7] classTimes;
     }
 
     // ClassId to Class
@@ -42,10 +52,12 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
     mapping(address => uint) public accountCredits;
     mapping(address => uint[]) public accountClasses;
 
+    // three timestamps in milliseconds
     uint256[3] public registrationPeriod;
 
-    constructor(address _UWIDContractAddress) ERC1155("") {
+    constructor(address _UWIDContractAddress, string memory _quarterName) ERC1155("") {
         UWIDContractAddress = _UWIDContractAddress;
+        quarterName = _quarterName;
     }
 
     modifier onlyUWAccounts(address to) {
@@ -104,18 +116,23 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
 
     function timeConflict(address account, uint256 classId) public view returns (bool) {
         uint i = 0;
+        uint j = 0;
         uint registeredClassId;
         bool b = false;
+
         for (; i < accountClasses[account].length; i += 1) {
             registeredClassId = accountClasses[account][i];
-            if (classes[classId].startTime < classes[registeredClassId].startTime ) {
-                if(classes[classId].endTime > classes[registeredClassId].startTime) {
-                    b = true;
+            // compare classtimes from monday to sunday
+            for (; j < 7; j += 1) {
+                if (classes[classId].classTimes[j].startTime < classes[registeredClassId].classTimes[j].startTime) {
+                    if(classes[classId].classTimes[j].endTime > classes[registeredClassId].classTimes[j].startTime) {
+                        return true;
+                    }
+                } else {
+                    if (classes[registeredClassId].classTimes[j].endTime > classes[classId].classTimes[j].startTime) {
+                        return true;
+                    } 
                 }
-            } else {
-                if (classes[registeredClassId].endTime < classes[classId].startTime) {
-                    b = true;
-                } 
             }
         }
         return b;
@@ -196,19 +213,20 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         uint256 enrollCapacity,
         uint256 credits,
         string memory creditType,
-        uint256 startTime,
-        uint256 endTime
+        uint256[7] memory startTimes,
+        uint256[7] memory endTimes
     ) public onlyOwner {
         require(classes[classId].classId == 0);
-        Class memory class;
-        class.classId = classId;
-        class.className = className;
-        class.enrollCapacity = enrollCapacity;
-        class.credits = credits;
-        class.creditType = creditType;
-        class.startTime = startTime;
-        class.endTime = endTime;
-        classes[classId] = class;
+        classes[classId].classId = classId;
+        classes[classId].className = className;
+        classes[classId].enrollCapacity = enrollCapacity;
+        classes[classId].credits = credits;
+        classes[classId].creditType = creditType;
+        uint i;
+        for (; i < 7; i += 1) {
+            classes[classId].classTimes[i].startTime = startTimes[i];
+            classes[classId].classTimes[i].endTime = endTimes[i];
+        }
     }
 
     function closeClass(uint256 classId) public onlyOwner {
@@ -221,8 +239,7 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         classes[classId].enrollCapacity = 0;
         classes[classId].credits = 0;
         classes[classId].creditType = "";
-        classes[classId].startTime = 0;
-        classes[classId].endTime = 0;
+        delete classes[classId].classTimes;
         delete classes[classId].classAccounts;
         delete classes[classId].classMajorRestrictions;
     }

@@ -1,13 +1,12 @@
-# Sample Hardhat Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+# UW Registration in Ethereum
+## Project for UW Blockchain Case Hack
 
-Try running some of the following tasks:
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
+
+```
+UWID: 0xA334C78Ce1c3a7DC5623e631b57aa3dCCd0A1616
+UWMajor(CSE): 0xa80ab75013F6fc52d038FE9f0A335a6CbD3Dc9FF
+
+
 ```
