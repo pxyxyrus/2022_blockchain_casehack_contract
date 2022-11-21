@@ -6,8 +6,10 @@ typechain
 typechain-types
 
 **/pk.txt
+**/test.js
 
 .DS_Store
+**/Test.sol
 
 #Hardhat files
 cache

@@ -33,12 +33,10 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
     struct Class {
         uint256 classId;
         string className;
+        uint256 currentlyEnrolled;
         uint256 enrollCapacity;
         uint256 credits;
         string creditType;
-
-        // account lists
-        address[] classAccounts;
         //MajorNFT addresses
         address[] classMajorRestrictions;
         // 0 ~ 6 <-> Monday ~ Sunday
@@ -60,68 +58,126 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         quarterName = _quarterName;
     }
 
+    function _beforeTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal virtual override {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
+        uint i = 0;
+        for (; i < ids.length; i += 1) {
+            if (to != address(0)) {            
+                if (isUWAccount(to)) {
+                    require(canEnroll(to, ids[i]));
+                }
+            }
+        }
+    }
+
+    function _afterTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal virtual override {
+        super._afterTokenTransfer(operator, from, to, ids, amounts, data);
+        uint i;
+        uint j;
+        for (i = 0; i < ids.length; i += 1) {
+            
+            if (to != address(0)) {
+                accountCredits[to] += classes[ids[i]].credits;
+            }
+            
+            if (from != address(0)) {
+                accountCredits[from] -= classes[ids[i]].credits;
+            }
+            
+            accountClasses[to].push(ids[i]);
+            for (; j < accountClasses[from].length; j += 1) {
+                if (accountClasses[from][j] == ids[i]) {
+                    accountClasses[from][j] = accountClasses[from][accountClasses[from].length - 1];
+                    accountClasses[from].pop();
+                    break;
+                }
+            }
+
+
+            if (from == address(0)) {
+                classes[ids[i]].currentlyEnrolled += 1;
+            }
+
+            if (to == address(0)) {
+                classes[ids[i]].currentlyEnrolled -= 1;
+            }
+        }
+            
+    }
+
+    function isUWAccount(address to) public view returns (bool) {
+        return IERC721(UWIDContractAddress).balanceOf(to) != 0;
+    }
+
     modifier onlyUWAccounts(address to) {
         require(tx.origin == msg.sender); // only EOA
-        require(IERC721(UWIDContractAddress).balanceOf(to) != 0, "Does not have an UW ID.");
+        require(isUWAccount(to), "Does not have an UW ID.");
         _;
     }
 
     function registered(address account, uint256 classId) public view returns (bool) {
-        bool b = false;
-        uint i = 0;
-        for (; i < classes[classId].classAccounts.length; i += 1) {
-            if (classes[classId].classAccounts[i] == account) {
-                b = true;
-                break;
-            }
-        }
-        return b;
+        return balanceOf(account, classId) != 0;
     }
 
     function classFull(uint256 classId) public view returns (bool) {
-        return classes[classId].classAccounts.length >= classes[classId].enrollCapacity;
+        return classes[classId].currentlyEnrolled >= classes[classId].enrollCapacity;
     }
 
-    function majorRestricted(address account, uint256 classId) public view returns (bool) {
-        bool b = true;
+    function majorRestriction(address account, uint256 classId) public view returns (bool) {
+        if (classes[classId].classMajorRestrictions.length == 0) {
+            return false;
+        }
         uint i = 0;
         for (; i < classes[classId].classMajorRestrictions.length; i += 1) {
             if (IERC721(classes[classId].classMajorRestrictions[i]).balanceOf(account) != 0) {
-                b = false;
-                break;
+                return false;
             }
         }
-        return b;
+        return true;
     }
 
     function exceedsMaxCredit(address account, uint256 classId) public view returns (bool) {
-        return accountCredits[account] + classes[classId].credits >= maxAllowedCredits;
+        return accountCredits[account] + classes[classId].credits > maxAllowedCredits;
     }
 
     function isRegistrationPeriod(address account) public view returns (bool) {
         uint256 id = UWID(UWIDContractAddress).accountTokenId(account);
-        bool b = false;
 
         if (UWID(UWIDContractAddress).credits(id) < 45) {
-            b = block.timestamp >= registrationPeriod[2];
+            return block.timestamp >= registrationPeriod[2];
         } else if (UWID(UWIDContractAddress).credits(id) < 90) {
-            b = block.timestamp >= registrationPeriod[1];
+            return block.timestamp >= registrationPeriod[1];
         } else if (UWID(UWIDContractAddress).credits(id) < 135) {
-            b = block.timestamp >= registrationPeriod[0];
+            return block.timestamp >= registrationPeriod[0];
         } else {
-            b = true;
+            return true;
         }
-        return b;
     }
 
-    function timeConflict(address account, uint256 classId) public view returns (bool) {
+    function hasTimeConflict(address account, uint256 classId) public view returns (bool) {
         uint i = 0;
         uint j = 0;
         uint registeredClassId;
-        bool b = false;
-
         for (; i < accountClasses[account].length; i += 1) {
             registeredClassId = accountClasses[account][i];
+
+            if (registeredClassId == 0) {
+                continue;
+            }
             // compare classtimes from monday to sunday
             for (; j < 7; j += 1) {
                 if (classes[classId].classTimes[j].startTime < classes[registeredClassId].classTimes[j].startTime) {
@@ -135,16 +191,16 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
                 }
             }
         }
-        return b;
+        return false;
     }
 
     function canEnroll(address account, uint256 classId) public view returns (bool) {
         return !exceedsMaxCredit(account, classId) &&
-        !majorRestricted(account, classId) &&
+        !majorRestriction(account, classId) &&
         !classFull(classId) &&
         !registered(account, classId) &&
         isRegistrationPeriod(account) && 
-        timeConflict(account, classId);
+        !hasTimeConflict(account, classId);
     }
 
 
@@ -154,9 +210,9 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         uint256 classId
     ) internal {
         _mint(account, classId, 1, "");
-        classes[classId].classAccounts.push(account);
-        accountClasses[account].push(classId);
-        accountCredits[account] += classes[classId].credits;
+        // classes[classId].currentlyEnrolled += 1;
+        // accountClasses[account].push(classId);
+        // accountCredits[account] += classes[classId].credits;
     }
 
     function registerClass(
@@ -168,15 +224,15 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
 
     function _dropClass(address account, uint256 classId) internal {
         _burn(account, classId, 1);
-        accountCredits[account] -= classes[classId].credits;
-        uint i = 0;
-        uint j;
-        for (; i < accountClasses[account].length; i += 1) {
-            if (accountClasses[account][i] == classId) {
-                delete accountClasses[account][i];
-                break;
-            }
-        }
+        // classes[classId].currentlyEnrolled -= 1;
+        // accountCredits[account] -= classes[classId].credits;
+        // uint i = 0;
+        // for (; i < accountClasses[account].length; i += 1) {
+        //     if (accountClasses[account][i] == classId) {
+        //         delete accountClasses[account][i];
+        //         break;
+        //     }
+        // }
     }
 
     function dropClass(uint256 classId) public onlyUWAccounts(msg.sender) {
@@ -229,18 +285,38 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         }
     }
 
-    function closeClass(uint256 classId) public onlyOwner {
-        uint i = 0;
-        for (; i < classes[classId].classAccounts.length; i += 1) {
-            _dropClass(classes[classId].classAccounts[i], classId);
+    function setMajorRestriction(
+        uint256 classId,
+        address majorAddress
+    ) public onlyOwner {
+        require(classes[classId].classId != 0);
+        classes[classId].classMajorRestrictions.push(majorAddress);
+    }
+
+    function removeMajorRestriction(
+        uint256 classId,
+        address majorAddress
+    ) public onlyOwner {
+        require(classes[classId].classId != 0);
+        uint i;
+        for (; i < classes[classId].classMajorRestrictions.length; i += 1) {
+            if (classes[classId].classMajorRestrictions[i] == majorAddress) {
+                classes[classId].classMajorRestrictions[i] = classes[classId].classMajorRestrictions[classes[classId].classMajorRestrictions.length - 1]; 
+                classes[classId].classMajorRestrictions.pop();
+                break;
+            }
         }
+    }
+
+
+    function closeClass(uint256 classId) public onlyOwner {
         classes[classId].classId = 0;
         classes[classId].className = "";
+        classes[classId].currentlyEnrolled = 0;
         classes[classId].enrollCapacity = 0;
         classes[classId].credits = 0;
         classes[classId].creditType = "";
         delete classes[classId].classTimes;
-        delete classes[classId].classAccounts;
         delete classes[classId].classMajorRestrictions;
     }
 

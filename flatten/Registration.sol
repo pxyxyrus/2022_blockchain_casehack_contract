@@ -30,7 +30,7 @@ abstract contract Context {
 
 // File @openzeppelin/contracts/access/Ownable.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.7.0) (access/Ownable.sol)
 
 pragma solidity ^0.8.0;
@@ -115,7 +115,7 @@ abstract contract Ownable is Context {
 
 // File @openzeppelin/contracts/utils/introspection/IERC165.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/IERC165.sol)
 
 pragma solidity ^0.8.0;
@@ -144,7 +144,7 @@ interface IERC165 {
 
 // File @openzeppelin/contracts/token/ERC721/IERC721.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (token/ERC721/IERC721.sol)
 
 pragma solidity ^0.8.0;
@@ -291,7 +291,7 @@ interface IERC721 is IERC165 {
 
 // File @openzeppelin/contracts/utils/math/Math.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (utils/math/Math.sol)
 
 pragma solidity ^0.8.0;
@@ -640,7 +640,7 @@ library Math {
 
 // File @openzeppelin/contracts/utils/Strings.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (utils/Strings.sol)
 
 pragma solidity ^0.8.0;
@@ -712,7 +712,7 @@ library Strings {
 
 // File @openzeppelin/contracts/utils/Address.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (utils/Address.sol)
 
 pragma solidity ^0.8.1;
@@ -958,40 +958,9 @@ library Address {
 }
 
 
-// File @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol@v4.8.0
-
-
-// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721Receiver.sol)
-
-pragma solidity ^0.8.0;
-
-/**
- * @title ERC721 token receiver interface
- * @dev Interface for any contract that wants to support safeTransfers
- * from ERC721 asset contracts.
- */
-interface IERC721Receiver {
-    /**
-     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
-     * by `operator` from `from`, this function is called.
-     *
-     * It must return its Solidity selector to confirm the token transfer.
-     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
-     *
-     * The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
-     */
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4);
-}
-
-
 // File @openzeppelin/contracts/utils/introspection/ERC165.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
 pragma solidity ^0.8.0;
@@ -1020,9 +989,40 @@ abstract contract ERC165 is IERC165 {
 }
 
 
+// File @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol@v4.8.0
+
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721Receiver.sol)
+
+pragma solidity ^0.8.0;
+
+/**
+ * @title ERC721 token receiver interface
+ * @dev Interface for any contract that wants to support safeTransfers
+ * from ERC721 asset contracts.
+ */
+interface IERC721Receiver {
+    /**
+     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
+     * by `operator` from `from`, this function is called.
+     *
+     * It must return its Solidity selector to confirm the token transfer.
+     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
+     *
+     * The selector can be obtained in Solidity with `IERC721Receiver.onERC721Received.selector`.
+     */
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external returns (bytes4);
+}
+
+
 // File @openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/IERC721Metadata.sol)
 
 pragma solidity ^0.8.0;
@@ -1051,7 +1051,7 @@ interface IERC721Metadata is IERC721 {
 
 // File @openzeppelin/contracts/token/ERC721/ERC721.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (token/ERC721/ERC721.sol)
 
 pragma solidity ^0.8.0;
@@ -1556,7 +1556,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
 // File @openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC721/extensions/IERC721Enumerable.sol)
 
 pragma solidity ^0.8.0;
@@ -1587,7 +1587,7 @@ interface IERC721Enumerable is IERC721 {
 
 // File @openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (token/ERC721/extensions/ERC721Enumerable.sol)
 
 pragma solidity ^0.8.0;
@@ -1820,7 +1820,7 @@ contract UWID is Ownable, ERC721 {
 
 // File @openzeppelin/contracts/token/ERC1155/IERC1155.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.7.0) (token/ERC1155/IERC1155.sol)
 
 pragma solidity ^0.8.0;
@@ -1947,7 +1947,7 @@ interface IERC1155 is IERC165 {
 
 // File @openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC1155/IERC1155Receiver.sol)
 
 pragma solidity ^0.8.0;
@@ -2007,7 +2007,7 @@ interface IERC1155Receiver is IERC165 {
 
 // File @openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (token/ERC1155/extensions/IERC1155MetadataURI.sol)
 
 pragma solidity ^0.8.0;
@@ -2031,7 +2031,7 @@ interface IERC1155MetadataURI is IERC1155 {
 
 // File @openzeppelin/contracts/token/ERC1155/ERC1155.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.8.0) (token/ERC1155/ERC1155.sol)
 
 pragma solidity ^0.8.0;
@@ -2550,7 +2550,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 
 // File @openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol@v4.8.0
 
-
+// SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC1155/extensions/ERC1155URIStorage.sol)
 
 pragma solidity ^0.8.0;
@@ -2637,18 +2637,24 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
 
     string public quarterName;
 
+    struct ClassTime {
+        // time/100 = hours time % 100 = minutes
+        // example 1430 -> 2:30pm
+        uint256 startTime; 
+        uint256 endTime;
+    }
+
     struct Class {
         uint256 classId;
         string className;
+        uint256 currentlyEnrolled;
         uint256 enrollCapacity;
         uint256 credits;
         string creditType;
-        // account lists
-        address[] classAccounts;
         //MajorNFT addresses
         address[] classMajorRestrictions;
-        uint256 startTime;
-        uint256 endTime;
+        // 0 ~ 6 <-> Monday ~ Sunday
+        ClassTime[7] classTimes;
     }
 
     // ClassId to Class
@@ -2658,6 +2664,7 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
     mapping(address => uint) public accountCredits;
     mapping(address => uint[]) public accountClasses;
 
+    // three timestamps in milliseconds
     uint256[3] public registrationPeriod;
 
     constructor(address _UWIDContractAddress, string memory _quarterName) ERC1155("") {
@@ -2665,86 +2672,149 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         quarterName = _quarterName;
     }
 
+    function _beforeTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal virtual override {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
+        uint i = 0;
+        for (; i < ids.length; i += 1) {
+            if (to != address(0)) {            
+                if (isUWAccount(to)) {
+                    require(canEnroll(to, ids[i]));
+                }
+            }
+        }
+    }
+
+    function _afterTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal virtual override {
+        super._afterTokenTransfer(operator, from, to, ids, amounts, data);
+        uint i;
+        uint j;
+        for (i = 0; i < ids.length; i += 1) {
+            
+            if (to != address(0)) {
+                accountCredits[to] += classes[ids[i]].credits;
+            }
+            
+            if (from != address(0)) {
+                accountCredits[from] -= classes[ids[i]].credits;
+            }
+            
+            accountClasses[to].push(ids[i]);
+            for (; j < accountClasses[from].length; j += 1) {
+                if (accountClasses[from][j] == ids[i]) {
+                    accountClasses[from][j] = accountClasses[from][accountClasses[from].length - 1];
+                    accountClasses[from].pop();
+                    break;
+                }
+            }
+
+
+            if (from == address(0)) {
+                classes[ids[i]].currentlyEnrolled += 1;
+            }
+
+            if (to == address(0)) {
+                classes[ids[i]].currentlyEnrolled -= 1;
+            }
+        }
+            
+    }
+
+    function isUWAccount(address to) public view returns (bool) {
+        return IERC721(UWIDContractAddress).balanceOf(to) != 0;
+    }
+
     modifier onlyUWAccounts(address to) {
         require(tx.origin == msg.sender); // only EOA
-        require(IERC721(UWIDContractAddress).balanceOf(to) != 0, "Does not have an UW ID.");
+        require(isUWAccount(to), "Does not have an UW ID.");
         _;
     }
 
     function registered(address account, uint256 classId) public view returns (bool) {
-        bool b = false;
-        uint i = 0;
-        for (; i < classes[classId].classAccounts.length; i += 1) {
-            if (classes[classId].classAccounts[i] == account) {
-                b = true;
-                break;
-            }
-        }
-        return b;
+        return balanceOf(account, classId) != 0;
     }
 
     function classFull(uint256 classId) public view returns (bool) {
-        return classes[classId].classAccounts.length >= classes[classId].enrollCapacity;
+        return classes[classId].currentlyEnrolled >= classes[classId].enrollCapacity;
     }
 
-    function majorRestricted(address account, uint256 classId) public view returns (bool) {
-        bool b = true;
+    function majorRestriction(address account, uint256 classId) public view returns (bool) {
+        if (classes[classId].classMajorRestrictions.length == 0) {
+            return false;
+        }
         uint i = 0;
         for (; i < classes[classId].classMajorRestrictions.length; i += 1) {
             if (IERC721(classes[classId].classMajorRestrictions[i]).balanceOf(account) != 0) {
-                b = false;
-                break;
+                return false;
             }
         }
-        return b;
+        return true;
     }
 
     function exceedsMaxCredit(address account, uint256 classId) public view returns (bool) {
-        return accountCredits[account] + classes[classId].credits >= maxAllowedCredits;
+        return accountCredits[account] + classes[classId].credits > maxAllowedCredits;
     }
 
     function isRegistrationPeriod(address account) public view returns (bool) {
         uint256 id = UWID(UWIDContractAddress).accountTokenId(account);
-        bool b = false;
 
         if (UWID(UWIDContractAddress).credits(id) < 45) {
-            b = block.timestamp >= registrationPeriod[2];
+            return block.timestamp >= registrationPeriod[2];
         } else if (UWID(UWIDContractAddress).credits(id) < 90) {
-            b = block.timestamp >= registrationPeriod[1];
+            return block.timestamp >= registrationPeriod[1];
         } else if (UWID(UWIDContractAddress).credits(id) < 135) {
-            b = block.timestamp >= registrationPeriod[0];
+            return block.timestamp >= registrationPeriod[0];
         } else {
-            b = true;
+            return true;
         }
-        return b;
     }
 
-    function timeConflict(address account, uint256 classId) public view returns (bool) {
+    function hasTimeConflict(address account, uint256 classId) public view returns (bool) {
         uint i = 0;
+        uint j = 0;
         uint registeredClassId;
-        bool b = false;
         for (; i < accountClasses[account].length; i += 1) {
             registeredClassId = accountClasses[account][i];
-            if (classes[classId].startTime < classes[registeredClassId].startTime ) {
-                if(classes[classId].endTime > classes[registeredClassId].startTime) {
-                    b = true;
+
+            if (registeredClassId == 0) {
+                continue;
+            }
+            // compare classtimes from monday to sunday
+            for (; j < 7; j += 1) {
+                if (classes[classId].classTimes[j].startTime < classes[registeredClassId].classTimes[j].startTime) {
+                    if(classes[classId].classTimes[j].endTime > classes[registeredClassId].classTimes[j].startTime) {
+                        return true;
+                    }
+                } else {
+                    if (classes[registeredClassId].classTimes[j].endTime > classes[classId].classTimes[j].startTime) {
+                        return true;
+                    } 
                 }
-            } else {
-                if (classes[registeredClassId].endTime < classes[classId].startTime) {
-                    b = true;
-                } 
             }
         }
-        return b;
+        return false;
     }
 
     function canEnroll(address account, uint256 classId) public view returns (bool) {
         return !exceedsMaxCredit(account, classId) &&
-        !majorRestricted(account, classId) &&
+        !majorRestriction(account, classId) &&
         !classFull(classId) &&
         !registered(account, classId) &&
         isRegistrationPeriod(account) && 
-        timeConflict(account, classId);
+        !hasTimeConflict(account, classId);
     }
 
 
@@ -2754,9 +2824,9 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         uint256 classId
     ) internal {
         _mint(account, classId, 1, "");
-        classes[classId].classAccounts.push(account);
-        accountClasses[account].push(classId);
-        accountCredits[account] += classes[classId].credits;
+        // classes[classId].currentlyEnrolled += 1;
+        // accountClasses[account].push(classId);
+        // accountCredits[account] += classes[classId].credits;
     }
 
     function registerClass(
@@ -2768,15 +2838,15 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
 
     function _dropClass(address account, uint256 classId) internal {
         _burn(account, classId, 1);
-        accountCredits[account] -= classes[classId].credits;
-        uint i = 0;
-        uint j;
-        for (; i < accountClasses[account].length; i += 1) {
-            if (accountClasses[account][i] == classId) {
-                delete accountClasses[account][i];
-                break;
-            }
-        }
+        // classes[classId].currentlyEnrolled -= 1;
+        // accountCredits[account] -= classes[classId].credits;
+        // uint i = 0;
+        // for (; i < accountClasses[account].length; i += 1) {
+        //     if (accountClasses[account][i] == classId) {
+        //         delete accountClasses[account][i];
+        //         break;
+        //     }
+        // }
     }
 
     function dropClass(uint256 classId) public onlyUWAccounts(msg.sender) {
@@ -2813,34 +2883,54 @@ contract Registration is Ownable, ERC1155, ERC1155URIStorage {
         uint256 enrollCapacity,
         uint256 credits,
         string memory creditType,
-        uint256 startTime,
-        uint256 endTime
+        uint256[7] memory startTimes,
+        uint256[7] memory endTimes
     ) public onlyOwner {
         require(classes[classId].classId == 0);
-        Class memory class;
-        class.classId = classId;
-        class.className = className;
-        class.enrollCapacity = enrollCapacity;
-        class.credits = credits;
-        class.creditType = creditType;
-        class.startTime = startTime;
-        class.endTime = endTime;
-        classes[classId] = class;
+        classes[classId].classId = classId;
+        classes[classId].className = className;
+        classes[classId].enrollCapacity = enrollCapacity;
+        classes[classId].credits = credits;
+        classes[classId].creditType = creditType;
+        uint i;
+        for (; i < 7; i += 1) {
+            classes[classId].classTimes[i].startTime = startTimes[i];
+            classes[classId].classTimes[i].endTime = endTimes[i];
+        }
     }
 
-    function closeClass(uint256 classId) public onlyOwner {
-        uint i = 0;
-        for (; i < classes[classId].classAccounts.length; i += 1) {
-            _dropClass(classes[classId].classAccounts[i], classId);
+    function setMajorRestriction(
+        uint256 classId,
+        address majorAddress
+    ) public onlyOwner {
+        require(classes[classId].classId != 0);
+        classes[classId].classMajorRestrictions.push(majorAddress);
+    }
+
+    function removeMajorRestriction(
+        uint256 classId,
+        address majorAddress
+    ) public onlyOwner {
+        require(classes[classId].classId != 0);
+        uint i;
+        for (; i < classes[classId].classMajorRestrictions.length; i += 1) {
+            if (classes[classId].classMajorRestrictions[i] == majorAddress) {
+                classes[classId].classMajorRestrictions[i] = classes[classId].classMajorRestrictions[classes[classId].classMajorRestrictions.length - 1]; 
+                classes[classId].classMajorRestrictions.pop();
+                break;
+            }
         }
+    }
+
+
+    function closeClass(uint256 classId) public onlyOwner {
         classes[classId].classId = 0;
         classes[classId].className = "";
+        classes[classId].currentlyEnrolled = 0;
         classes[classId].enrollCapacity = 0;
         classes[classId].credits = 0;
         classes[classId].creditType = "";
-        classes[classId].startTime = 0;
-        classes[classId].endTime = 0;
-        delete classes[classId].classAccounts;
+        delete classes[classId].classTimes;
         delete classes[classId].classMajorRestrictions;
     }
 
