@@ -1,8 +1,4 @@
 const contractName = 'Test';
-// const tokenName = 'Embody';
-// const tokenSymbol = 'EMBODY';
-
-// const imxContractAddress = '0x4527be8f31e2ebfbef4fcaddb5a17447b27d2aef';
 
 const func = async (hre) => {
 	const { deployments, getNamedAccounts, getUnnamedAccounts } = hre;

@@ -958,37 +958,6 @@ library Address {
 }
 
 
-// File @openzeppelin/contracts/utils/introspection/ERC165.sol@v4.8.0
-
-// SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
-
-pragma solidity ^0.8.0;
-
-/**
- * @dev Implementation of the {IERC165} interface.
- *
- * Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check
- * for the additional interface id that will be supported. For example:
- *
- * ```solidity
- * function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
- *     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);
- * }
- * ```
- *
- * Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.
- */
-abstract contract ERC165 is IERC165 {
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-        return interfaceId == type(IERC165).interfaceId;
-    }
-}
-
-
 // File @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol@v4.8.0
 
 // SPDX-License-Identifier: MIT
@@ -1017,6 +986,37 @@ interface IERC721Receiver {
         uint256 tokenId,
         bytes calldata data
     ) external returns (bytes4);
+}
+
+
+// File @openzeppelin/contracts/utils/introspection/ERC165.sol@v4.8.0
+
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
+
+pragma solidity ^0.8.0;
+
+/**
+ * @dev Implementation of the {IERC165} interface.
+ *
+ * Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check
+ * for the additional interface id that will be supported. For example:
+ *
+ * ```solidity
+ * function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+ *     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);
+ * }
+ * ```
+ *
+ * Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.
+ */
+abstract contract ERC165 is IERC165 {
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        return interfaceId == type(IERC165).interfaceId;
+    }
 }
 
 
@@ -2613,7 +2613,7 @@ abstract contract ERC1155URIStorage is ERC1155 {
 }
 
 
-// File contracts/Registration.sol
+// File contracts/UWClasses.sol
 
 pragma solidity ^0.8.9;
 
@@ -2629,7 +2629,7 @@ pragma solidity ^0.8.9;
 
 
 
-contract Registration is Ownable, ERC1155, ERC1155URIStorage {
+contract UWClasses is Ownable, ERC1155, ERC1155URIStorage {
 
     address public UWIDContractAddress;
 

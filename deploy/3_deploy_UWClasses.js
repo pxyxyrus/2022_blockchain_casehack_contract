@@ -1,4 +1,4 @@
-const contractName = 'Registration';
+const contractName = 'UWClasses';
 const quarterName = 'WIN2023';
 
 const func = async (hre) => {

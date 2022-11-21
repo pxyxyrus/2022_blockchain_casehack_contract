@@ -15,7 +15,7 @@ import "./UWID.sol";
 
 
 
-contract Registration is Ownable, ERC1155, ERC1155URIStorage {
+contract UWClasses is Ownable, ERC1155, ERC1155URIStorage {
 
     address public UWIDContractAddress;
 
