@@ -66,7 +66,7 @@ contract UWIDUpgradeable is Initializable, OwnableUpgradeable, ERC721Upgradeable
         credits[tokenId] += creditNum;
     }
     
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721Upgradeable) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
@@ -75,7 +75,7 @@ contract UWIDUpgradeable is Initializable, OwnableUpgradeable, ERC721Upgradeable
         address to,
         uint256 firstTokenId,
         uint256 batchSize
-    ) internal override(ERC721) {
+    ) internal override(ERC721Upgradeable) {
         super._beforeTokenTransfer(from, to, firstTokenId, batchSize);
     }
 

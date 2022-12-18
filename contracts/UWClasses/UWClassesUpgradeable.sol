@@ -12,7 +12,7 @@ import "../UWID/UWIDUpgradeable.sol";
 
 
 
-contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC1155URIStorageUpgradeable {
+contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC1155URIStorageUpgradeable {
 
     // state variables
     address public UWIDContractAddress;
@@ -54,11 +54,6 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
 
 
     // initializer 
-    constructor(address _UWIDContractAddress, string memory _quarterName) ERC1155("") {
-        UWIDContractAddress = _UWIDContractAddress;
-        quarterName = _quarterName;
-    }
-
     function __UWClasses__init(address _UWIDContractAddress, string memory _quarterName) public initializer {
         __ERC1155_init("");
         __UWClasses__init__unchained(_UWIDContractAddress, _quarterName);
@@ -67,6 +62,9 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
     function __UWClasses__init__unchained(address _UWIDContractAddress, string memory _quarterName) internal onlyInitializing {
         UWIDContractAddress = _UWIDContractAddress;
         quarterName = _quarterName;
+        registrationPeriods.push(0);
+        registrationPeriods.push(0);
+        registrationPeriods.push(0);
     }
 
     // functions
@@ -132,7 +130,7 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
     }
 
     function isUWAccount(address to) public view returns (bool) {
-        return IERC721(UWIDContractAddress).balanceOf(to) != 0;
+        return IERC721Upgradeable(UWIDContractAddress).balanceOf(to) != 0;
     }
 
     modifier onlyUWAccounts(address to) {
@@ -155,7 +153,7 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
         }
         uint i = 0;
         for (; i < classes[classId].classMajorRestrictions.length; i += 1) {
-            if (IERC721(classes[classId].classMajorRestrictions[i]).balanceOf(account) != 0) {
+            if (IERC721Upgradeable(classes[classId].classMajorRestrictions[i]).balanceOf(account) != 0) {
                 return false;
             }
         }
@@ -167,14 +165,14 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
     }
 
     function isRegistrationPeriod(address account) public view returns (bool) {
-        uint256 id = UWID(UWIDContractAddress).accountTokenId(account);
+        uint256 id = UWIDUpgradeable(UWIDContractAddress).accountTokenId(account);
 
-        if (UWID(UWIDContractAddress).credits(id) < 45) {
-            return block.timestamp >= registrationPeriod[2];
-        } else if (UWID(UWIDContractAddress).credits(id) < 90) {
-            return block.timestamp >= registrationPeriod[1];
-        } else if (UWID(UWIDContractAddress).credits(id) < 135) {
-            return block.timestamp >= registrationPeriod[0];
+        if (UWIDUpgradeable(UWIDContractAddress).credits(id) < 45) {
+            return block.timestamp >= registrationPeriods[2];
+        } else if (UWIDUpgradeable(UWIDContractAddress).credits(id) < 90) {
+            return block.timestamp >= registrationPeriods[1];
+        } else if (UWIDUpgradeable(UWIDContractAddress).credits(id) < 135) {
+            return block.timestamp >= registrationPeriods[0];
         } else {
             return true;
         }
@@ -271,8 +269,8 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
         _setBaseURI(baseURI);
     }
 
-    function uri(uint256 tokenId) public view override(ERC1155, ERC1155URIStorage) returns (string memory) {
-        return ERC1155URIStorage.uri(tokenId);
+    function uri(uint256 tokenId) public view override(ERC1155Upgradeable, ERC1155URIStorageUpgradeable) returns (string memory) {
+        return ERC1155URIStorageUpgradeable.uri(tokenId);
     }
 
     function addClass(
@@ -338,9 +336,10 @@ contract UWClasses is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC
 
 
     function setRegistrationPeriod(uint256 period1, uint256 period2, uint256 period3) public onlyOwner {
-        registrationPeriod[0] = period1;
-        registrationPeriod[1] = period2;
-        registrationPeriod[2] = period3;
+        require(registrationPeriods.length >= 3);
+        registrationPeriods[0] = period1;
+        registrationPeriods[1] = period2;
+        registrationPeriods[2] = period3;
     }
 
 }

@@ -26,7 +26,7 @@ contract UWMajorUpgradeable is Initializable, OwnableUpgradeable, ERC721Upgradea
 
     // functions  
     modifier onlyUWAccounts(address to) {
-        require(IERC721(UWIDContractAddress).balanceOf(to) != 0, "Does not have an UW ID.");
+        require(IERC721Upgradeable(UWIDContractAddress).balanceOf(to) != 0, "Does not have an UW ID.");
         _;
     }
 
@@ -36,7 +36,7 @@ contract UWMajorUpgradeable is Initializable, OwnableUpgradeable, ERC721Upgradea
     }
 
     function mint(address to) external onlyOwner onlyUWAccounts(to) onlyNotInThisMajor(to) {
-        _safeMint(to, UWID(UWIDContractAddress).accountTokenId(to));
+        _safeMint(to, UWIDUpgradeable(UWIDContractAddress).accountTokenId(to));
     }
 
     function _transfer(
