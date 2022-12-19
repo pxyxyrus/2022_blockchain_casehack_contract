@@ -1,21 +1,22 @@
-const contractName = 'Test';
+const contractName = 'UWIDUpgradeable';
+const symbol = "UW";
+const name = "University of Washington";
 
 const func = async (hre) => {
-	const { deployments, getNamedAccounts, getUnnamedAccounts } = hre;
+	const { deployments, getNamedAccounts, getUnnamedAccounts, network } = hre;
 	const { deploy } = deployments;
 
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
 
-
 	await deploy(contractName, {
 		from: deployer,
-		args: [],
+		args: [name, symbol],
 		log: true,
 		autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
 	});
 }
 
-func.tags = [contractName];
+func.tags = ['7'];
 // func.id = ;
 // func.dependencies = [];
 // func.runAtTheEnd = true;

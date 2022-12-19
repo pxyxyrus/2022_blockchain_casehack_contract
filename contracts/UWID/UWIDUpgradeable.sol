@@ -15,13 +15,13 @@ contract UWIDUpgradeable is Initializable, OwnableUpgradeable, ERC721Upgradeable
 
 
     // initializer
-    function __UWID__init(string memory name_, string memory symbol_) public initializer {
+    function __UWID_init(string memory name_, string memory symbol_) public initializer {
         __Ownable_init();
         __ERC721_init(name_, symbol_);
-        __UWID__init__unchained();
+        __UWID_init_unchained();
     }
 
-    function __UWID__init__unchained() internal onlyInitializing {
+    function __UWID_init_unchained() internal onlyInitializing {
         _id = 1;
     }
 

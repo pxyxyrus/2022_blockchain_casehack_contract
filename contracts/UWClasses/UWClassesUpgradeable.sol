@@ -54,12 +54,12 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
 
 
     // initializer 
-    function __UWClasses__init(address _UWIDContractAddress, string memory _quarterName) public initializer {
+    function __UWClasses_init(address _UWIDContractAddress, string memory _quarterName) public initializer {
         __ERC1155_init("");
-        __UWClasses__init__unchained(_UWIDContractAddress, _quarterName);
+        __UWClasses_init_unchained(_UWIDContractAddress, _quarterName);
     }
 
-    function __UWClasses__init__unchained(address _UWIDContractAddress, string memory _quarterName) internal onlyInitializing {
+    function __UWClasses_init_unchained(address _UWIDContractAddress, string memory _quarterName) internal onlyInitializing {
         UWIDContractAddress = _UWIDContractAddress;
         quarterName = _quarterName;
         registrationPeriods.push(0);

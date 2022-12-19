@@ -4,9 +4,9 @@ const quarterName = 'WIN2023';
 const func = async (hre) => {
 	const { deployments, getNamedAccounts, getUnnamedAccounts } = hre;
 	const { deploy } = deployments;
-  
-	const {deployer, simpleERC20Beneficiary} = await getNamedAccounts();
-    
+
+	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
+
 	const UWIDContract = await deployments.get("UWID");
 
 	await deploy(contractName, {
