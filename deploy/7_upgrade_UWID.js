@@ -7,13 +7,6 @@ const func = async (hre) => {
 	const { deploy } = deployments;
 
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
-
-	await deploy(contractName, {
-		from: deployer,
-		args: [name, symbol],
-		log: true,
-		autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
-	});
 }
 
 func.tags = ['7'];

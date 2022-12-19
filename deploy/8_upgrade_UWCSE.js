@@ -9,13 +9,6 @@ const func = async (hre) => {
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
 
 	const UWIDContract = await deployments.get("UWID");
-
-	await deploy(contractName, {
-		from: deployer,
-		args: [name, symbol, UWIDContract.address],
-		log: true,
-		autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
-	});
 }
 
 func.tags = ['8'];
