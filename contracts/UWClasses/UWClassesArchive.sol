@@ -57,6 +57,8 @@ contract UWClassesArchive is Initializable, OwnableUpgradeable, ERC1155Upgradeab
 
     function _archive(address classNFTAddress, uint256 courseId) internal onlyUWAccounts(msg.sender) {
         require(isUWClassNFTAddressList[classNFTAddress]);
+
+
         // bytes32 courseId;
         // string memory quarterName;
         // (courseId,,,,,,,,,) = UWClassesUpgradeable(classNFTAddress).classes(
@@ -104,7 +106,4 @@ contract UWClassesArchive is Initializable, OwnableUpgradeable, ERC1155Upgradeab
         return accountCourseQuarterInfo[account][courseId];
     }
 
-    // function courseNameToCourseId(string memory courseName) public pure returns(bytes32) {
-    //     return keccak256(abi.encode(courseName));
-    // }
 }

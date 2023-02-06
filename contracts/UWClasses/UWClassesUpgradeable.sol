@@ -26,6 +26,8 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
 
     string public quarterName;
 
+    bool public quaterEnd;
+
     struct Class {
         bytes32 courseId; // unique for each course ex) CSE 121 or ARCH 152
         uint256 classId; // sln
@@ -177,8 +179,14 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         }
         
         for (i = 0; i < ids.length; i += 1) {
-            accountRegisteredAllCourseSections(to, classes[ids[i]].courseId);
-            accountDroppedAllCourseSections(from, classes[ids[i]].courseId);
+            // not burning but transferring in
+            if (to != address(0)) {
+                accountRegisteredAllCourseSections(to, classes[ids[i]].courseId);
+            }
+            // not minting but transferring out
+            if (from != address(0)) {
+                accountDroppedAllCourseSections(from, classes[ids[i]].courseId);
+            }
         }
 
     }
@@ -269,7 +277,8 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     }
 
     function canEnroll(address account, uint256 classId) public view returns (bool) {
-        return !exceedsMaxCredit(account, classId) &&
+        return !quaterEnd &&
+        !exceedsMaxCredit(account, classId) &&
         !majorRestriction(account, classId) &&
         !classFull(classId) &&
         !classRegistered(account, classId) &&
@@ -296,10 +305,9 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         //
 
 
-        intentional error to remember that I need to implement this function
 
 
-        return ;
+        return true;
     }
 
     // postcondition
