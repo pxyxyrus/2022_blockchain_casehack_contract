@@ -18,7 +18,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
 
     using UWUtils for string;
 
-    address public UWIDContractAddress;
+    address public UWIDAddress;
 
     address public UWArchiveAddress;
 
@@ -86,13 +86,14 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     uint256 public currentSupply;
 
     // initializer 
-    function __UWClasses_init(address _UWIDContractAddress, string memory _quarterName) public initializer {
+    function __UWClasses_init(address _UWIDAddress, address _UWArchiveAddress, string memory _quarterName) public initializer {
         __ERC1155_init("");
-        __UWClasses_init_unchained(_UWIDContractAddress, _quarterName);
+        __UWClasses_init_unchained(_UWIDAddress, _UWArchiveAddress, _quarterName);
     }
 
-    function __UWClasses_init_unchained(address _UWIDContractAddress, string memory _quarterName) internal onlyInitializing {
-        UWIDContractAddress = _UWIDContractAddress;
+    function __UWClasses_init_unchained(address _UWIDAddress, address _UWArchiveAddress, string memory _quarterName) internal onlyInitializing {
+        UWIDAddress = _UWIDAddress;
+        UWArchiveAddress = _UWArchiveAddress;
         quarterName = _quarterName;
         registrationPeriods.push(0);
         registrationPeriods.push(0);
@@ -195,7 +196,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     }
 
     function isUWAccount(address to) public view returns (bool) {
-        return IERC721Upgradeable(UWIDContractAddress).balanceOf(to) != 0;
+        return IERC721Upgradeable(UWIDAddress).balanceOf(to) != 0;
     }
 
     // precondition
@@ -258,13 +259,13 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
 
     // precondition
     function isRegistrationPeriod(address account) public view returns (bool) {
-        uint256 id = UWIDUpgradeable(UWIDContractAddress).accountTokenId(account);
+        uint256 id = UWIDUpgradeable(UWIDAddress).accountTokenId(account);
 
-        if (UWIDUpgradeable(UWIDContractAddress).credits(id) < 45) {
+        if (UWIDUpgradeable(UWIDAddress).credits(id) < 45) {
             return block.timestamp >= registrationPeriods[2];
-        } else if (UWIDUpgradeable(UWIDContractAddress).credits(id) < 90) {
+        } else if (UWIDUpgradeable(UWIDAddress).credits(id) < 90) {
             return block.timestamp >= registrationPeriods[1];
-        } else if (UWIDUpgradeable(UWIDContractAddress).credits(id) < 135) {
+        } else if (UWIDUpgradeable(UWIDAddress).credits(id) < 135) {
             return block.timestamp >= registrationPeriods[0];
         } else {
             return true;
