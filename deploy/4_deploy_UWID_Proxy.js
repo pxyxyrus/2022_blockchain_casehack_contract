@@ -19,9 +19,9 @@ const func = async (hre) => {
 		autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
 	});
 
-	// function signature
-	const initSig = '__UWID_init(string,string)';
 	// function selector for the init function
+	const initSig = '__UWID_init(string,string)';
+	// function signature
 	const initHex = web3.eth.abi.encodeFunctionSignature(initSig)
 		+ web3.eth.abi.encodeParameters(['string', 'string'], [name, symbol]).substring(2);
 

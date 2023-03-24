@@ -22,9 +22,9 @@ const func = async (hre) => {
 	});
 
 
-	// function signature
-	const initSig = '__UWMajor_init(string,string,address)';
 	// function selector for the init function
+	const initSig = '__UWMajor_init(string,string,address)';
+	// function signature
 	const initHex = web3.eth.abi.encodeFunctionSignature(initSig)
 		+ web3.eth.abi.encodeParameters(['string', 'string', 'address'], [name, symbol, UWIDProxy.address]).substring(2);
 
