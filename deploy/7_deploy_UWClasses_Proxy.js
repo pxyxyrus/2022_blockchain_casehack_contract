@@ -12,6 +12,7 @@ const func = async (hre) => {
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
 
 	const UWIDProxy = await deployments.get("UWIDProxy");
+	const UWArchiveProxy = await deployments.sget("UWArchiveProxy");
 
 	const implementation = await deploy(contractName, {
 		from: deployer,
@@ -21,11 +22,11 @@ const func = async (hre) => {
 		autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
 	});
 
-	// function signature
-	const initSig = '__UWClasses_init(address,string)';
 	// function selector for the init function
+	const initSig = '__UWClasses_init(address,string)';
+	// function signature
 	const initHex = web3.eth.abi.encodeFunctionSignature(initSig)
-		+ web3.eth.abi.encodeParameters(['address', 'string'], [UWIDProxy.address, quarterName]).substring(2);
+		+ web3.eth.abi.encodeParameters(['address', 'address', 'string'], [UWIDProxy.address, UWArchiveProxy, quarterName]).substring(2);
 
 	const proxy = await deploy(proxyName, {
 		from: deployer,
