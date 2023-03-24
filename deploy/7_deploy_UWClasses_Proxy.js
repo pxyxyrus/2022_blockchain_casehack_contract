@@ -36,7 +36,7 @@ const func = async (hre) => {
 	});
 }
 
-func.tags = ['6'];
+func.tags = ['7'];
 // func.id = ;
 // func.dependencies = [];
 // func.runAtTheEnd = true;

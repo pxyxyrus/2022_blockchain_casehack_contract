@@ -1,6 +1,5 @@
-const contractName = 'UWMajorUpgradeable';
-const symbol = "UWCSE";
-const name = "University of Washington Computer Science";
+const contractName = 'UWClassesUpgradeable';
+const quarterName = 'WIN2023';
 
 const func = async (hre) => {
 	const { deployments, getNamedAccounts, getUnnamedAccounts, network } = hre;
@@ -8,8 +7,9 @@ const func = async (hre) => {
 
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
 
+}
 
-func.tags = ['8'];
+func.tags = ['10'];
 // func.id = ;
 // func.dependencies = [];
 // func.runAtTheEnd = true;

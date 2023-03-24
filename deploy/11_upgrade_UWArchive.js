@@ -9,7 +9,7 @@ const func = async (hre) => {
 
 }
 
-func.tags = ['9'];
+func.tags = ['11'];
 // func.id = ;
 // func.dependencies = [];
 // func.runAtTheEnd = true;
