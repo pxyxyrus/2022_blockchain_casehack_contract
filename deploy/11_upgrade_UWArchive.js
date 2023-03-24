@@ -1,4 +1,4 @@
-const contractName = 'UWClassesUpgradeable';
+const contractName = 'UWArchiveUpgradeable';
 const quarterName = 'WIN2023';
 
 const func = async (hre) => {

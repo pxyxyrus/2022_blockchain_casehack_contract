@@ -8,8 +8,6 @@ const func = async (hre) => {
 
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
 
-	const UWIDContract = await deployments.get("UWID");
-}
 
 func.tags = ['8'];
 // func.id = ;
