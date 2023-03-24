@@ -7,7 +7,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155URIS
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../UWID/UWIDUpgradeable.sol";
-import "./UWClassesArchive.sol";
+import "./UWArchiveUpgradeable.sol";
 import "./UWUtils.sol";
 
 
@@ -20,13 +20,13 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
 
     address public UWIDContractAddress;
 
-    address public UWClassesArchiveAddress;
+    address public UWArchiveAddress;
 
     uint256 public maxAllowedCredits = 20;
 
     string public quarterName;
 
-    bool public quaterEnd;
+    bool public quarterEnd;
 
     struct Class {
         bytes32 courseId; // unique for each course ex) CSE 121 or ARCH 152
@@ -68,7 +68,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     mapping(address => uint256[]) public accountClasses;
 
     // account to courseId
-    mapping(address => mapping(bytes32 => bool)) public accountCourses;
+    mapping(address => mapping(bytes32 => bool)) public accountIsRegisteredForCourse;
 
     // account to weekdaytime
     mapping(address => bytes30) public accountWeekdayTime;
@@ -134,24 +134,25 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         uint256 j;
         bytes30 classWeekdaySchedule;
         bytes12 classWeekendSchedule;
+        // updating info
         for (i = 0; i < ids.length; i += 1) {
             classWeekdaySchedule = classes[ids[i]].weekdayTime;
             classWeekendSchedule = classes[ids[i]].weekendTime;
             
-            // not burning but transferring in
+            // not burning
             if (to != address(0)) {
                 accountCredits[to] += classes[ids[i]].credits;
                 accountWeekdayTime[to] = accountWeekdayTime[to] | classWeekdaySchedule;
-                accountCourses[to][classes[ids[i]].courseId] = true;
+                accountIsRegisteredForCourse[to][classes[ids[i]].courseId] = true;
                 accountCourseSectionInfo[to][classes[ids[i]].courseId] =
                     accountCourseSectionInfo[to][classes[ids[i]].courseId] | classes[ids[i]].sectionType;
             }
 
-            // not minting but transferring out
+            // not minting
             if (from != address(0)) {
                 accountCredits[from] -= classes[ids[i]].credits;
                 accountWeekendTime[from] = accountWeekendTime[from] & (~classWeekendSchedule);
-                accountCourses[from][classes[ids[i]].courseId] = false;
+                accountIsRegisteredForCourse[from][classes[ids[i]].courseId] = false;
                 accountCourseSectionInfo[to][classes[ids[i]].courseId] =
                     accountCourseSectionInfo[to][classes[ids[i]].courseId] & (~classes[ids[i]].sectionType);
             }
@@ -178,6 +179,8 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
             }
         }
         
+
+        // checking conditions after update
         for (i = 0; i < ids.length; i += 1) {
             // not burning but transferring in
             if (to != address(0)) {
@@ -235,7 +238,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         for (i = 0; i < coursePrerequisites[courseId].length; i++) {
             meet = true;
             for (j = 0; i < coursePrerequisites[courseId][i].length; i++) {
-                if (UWClassesArchive(UWClassesArchiveAddress).balanceOf(account, uint256(coursePrerequisites[courseId][i][j])) == 0) {
+                if (UWArchiveUpgradeable(UWArchiveAddress).accountHasTakenCourse(account, coursePrerequisites[courseId][i][j])) {
                     meet = false;
                     break;
                 }
@@ -277,7 +280,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     }
 
     function canEnroll(address account, uint256 classId) public view returns (bool) {
-        return !quaterEnd &&
+        return !quarterEnd &&
         !exceedsMaxCredit(account, classId) &&
         !majorRestriction(account, classId) &&
         !classFull(classId) &&
@@ -298,16 +301,18 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         return accountDroppedAllCourseSections(account, courseName.courseNameToCourseId());
     }
 
-
-
     // postcondition
     function accountRegisteredAllCourseSections(address account, bytes32 courseId) public view returns (bool) {
-        //
+        uint8 sectionRequirement = courseSectionRequirements[courseId];
+        bytes20 binary = bytes20(uint160((2 ** sectionRequirement) - 1));
+        while (binary != bytes20(0)) {
+            if(accountCourseSectionInfo[account][courseId] == binary) {
+                return true;
+            }
+            binary = binary << sectionRequirement;
+        }
 
-
-
-
-        return true;
+        return false;
     }
 
     // postcondition
@@ -347,6 +352,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         uint256 i = 0;
         uint256[] memory amounts = new uint256[](classIds.length);
         for (; i < classIds.length; i += 1) {
+            amounts[i] = 1;
         }
         _mintBatch(msg.sender, classIds, amounts, "");
 
@@ -448,7 +454,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         courseSectionRequirements[courseName.courseNameToCourseId()] = sectionRequirements;
     }
 
-    // closeClassHas implementation issues
+    // closeClass has implementation issues
     // function closeClass(uint256 classId) public onlyOwner {
     //     classes[classId].courseId = bytes32(0);
     //     classes[classId].classId = 0;
@@ -476,8 +482,11 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         registrationPeriods[2] = period3;
     }
 
-    function getClassesOfAccount(address account) external view returns (uint256[] memory) {
-        return accountClasses[account];
+    function endQuarter() external onlyOwner {
+        quarterEnd = true;
     }
 
+    function numberOfClasses(address account) external view returns (uint256) {
+        return accountClasses[account].length;
+    }
 }

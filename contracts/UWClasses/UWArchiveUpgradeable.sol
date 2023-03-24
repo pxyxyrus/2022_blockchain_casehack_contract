@@ -12,11 +12,12 @@ import "./UWUtils.sol";
 
 
 
-
-contract UWClassesArchive is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC1155URIStorageUpgradeable {
+// CourseID is bytes32 but it is also the tokenID of the ERC1155 contract
+// so convert bytes32 to uint256 whenever ERC1155 functions are called.
+contract UWArchiveUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgradeable, ERC1155URIStorageUpgradeable {
 
     using UWUtils for string;
-    
+     
     // state variables
     address public UWIDContractAddress;
 
@@ -27,15 +28,18 @@ contract UWClassesArchive is Initializable, OwnableUpgradeable, ERC1155Upgradeab
     mapping(address => bool) isUWClassNFTAddressList;
 
     // Account, CourseID, Quarter list
-    mapping(address => mapping(uint256 => string[])) public accountCourseQuarterInfo;
+    mapping(address => mapping(bytes32 => string[])) public accountCourseQuarterInfo;
+    
+    // tripple mapping to save if Account, CourseID, Quarter exists
+    mapping(address => mapping(bytes32 => mapping(string => bool))) public accountCourseQuarterExists;
 
     // initializer 
-    function __UWClasses_init(address _UWIDContractAddress) public initializer {
+    function __UWArchive_init(address _UWIDContractAddress) public initializer {
         __ERC1155_init("");
-        __UWClasses_init_unchained(_UWIDContractAddress);
+        __UWArchive_init_unchained(_UWIDContractAddress);
     }
 
-    function __UWClasses_init_unchained(address _UWIDContractAddress) internal onlyInitializing {
+    function __UWArchive_init_unchained(address _UWIDContractAddress) internal onlyInitializing {
         UWIDContractAddress = _UWIDContractAddress;
     }
 
@@ -50,23 +54,29 @@ contract UWClassesArchive is Initializable, OwnableUpgradeable, ERC1155Upgradeab
     }
 
 
-    function archiveCourse(address classNFTAddress, uint256 id) external onlyUWAccounts(msg.sender) {
+    function archive(address classNFTAddress) external onlyUWAccounts(msg.sender) {
         // CourseID, balance
-        _archive(classNFTAddress, id);
+        _archive(classNFTAddress, msg.sender);
     }
 
-    function _archive(address classNFTAddress, uint256 courseId) internal onlyUWAccounts(msg.sender) {
+    function _archive(address classNFTAddress, address account) internal onlyUWAccounts(account) {
         require(isUWClassNFTAddressList[classNFTAddress]);
+        require(UWClassesUpgradeable(classNFTAddress).quarterEnd());
+        string memory quarterName = UWClassesUpgradeable(classNFTAddress).quarterName();
+        uint256 classlen = UWClassesUpgradeable(classNFTAddress).numberOfClasses(account);
+        uint256 i = 0;
+        uint256 classId; // for less variable usage
+        bytes32 courseId;
 
-
-        // bytes32 courseId;
-        // string memory quarterName;
-        // (courseId,,,,,,,,,) = UWClassesUpgradeable(classNFTAddress).classes(
-        //     classId
-        // );
-        // quarterName = UWClassesUpgradeable(classNFTAddress).quarterName();
-        // accountCourseQuarterInfo[msg.sender][uint256(courseId)].push(quarterName);
-        // _mint(msg.sender, uint256(courseId), 1, "");
+        for (i = 0; i < classlen; i += 1) {
+            classId = UWClassesUpgradeable(classNFTAddress).accountClasses(account, i);
+            (courseId,,,,,,,,,,) = UWClassesUpgradeable(classNFTAddress).classes(classId);
+            if (!accountCourseQuarterExists[account][courseId][quarterName]) {
+                accountCourseQuarterExists[account][courseId][quarterName] = true;
+                accountCourseQuarterInfo[account][courseId].push(quarterName);
+                _mint(account, courseIdToTokenId(courseId), 1, "");
+            }
+        }
     }
 
 
@@ -102,8 +112,12 @@ contract UWClassesArchive is Initializable, OwnableUpgradeable, ERC1155Upgradeab
         isUWClassNFTAddressList[classNFTAddress] = false;
     }
 
-    function getCourseAccountQuarterInfo(address account, uint256 courseId) external view returns (string[] memory) {
-        return accountCourseQuarterInfo[account][courseId];
+    function courseIdToTokenId(bytes32 courseId) public pure returns (uint256) {
+        return uint256(courseId);
     }
 
+
+    function accountHasTakenCourse(address account, bytes32 courseId) public view returns (bool) {
+        return (balanceOf(account, courseIdToTokenId(courseId)) != 0);
+    }
 }

@@ -58,7 +58,7 @@ token symbol: UWCSE
 * The uri function shows the class information on the UW time schedule page.
 
 
-### UWClassesArchive(ERC-1155)
+### UWArchiveUpgradeable(ERC-1155)
 * The token ID represents the course ID.
 * Student accounts that own the UWID NFT are only allowed to archive(mint) classes.
 * Transferring is not allowed.
