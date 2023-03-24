@@ -19,7 +19,7 @@ contract UWArchiveUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     using UWUtils for string;
      
     // state variables
-    address public UWIDContractAddress;
+    address public UWIDAddress;
 
     // list of UW Classes NFTs
     address[] public UWClassNFTAddressList;
@@ -34,17 +34,17 @@ contract UWArchiveUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
     mapping(address => mapping(bytes32 => mapping(string => bool))) public accountCourseQuarterExists;
 
     // initializer 
-    function __UWArchive_init(address _UWIDContractAddress) public initializer {
+    function __UWArchive_init(address _UWIDAddress) public initializer {
         __ERC1155_init("");
-        __UWArchive_init_unchained(_UWIDContractAddress);
+        __UWArchive_init_unchained(_UWIDAddress);
     }
 
-    function __UWArchive_init_unchained(address _UWIDContractAddress) internal onlyInitializing {
-        UWIDContractAddress = _UWIDContractAddress;
+    function __UWArchive_init_unchained(address _UWIDAddress) internal onlyInitializing {
+        UWIDAddress = _UWIDAddress;
     }
 
     function isUWAccount(address to) public view returns (bool) {
-        return IERC721Upgradeable(UWIDContractAddress).balanceOf(to) != 0;
+        return IERC721Upgradeable(UWIDAddress).balanceOf(to) != 0;
     }
 
     modifier onlyUWAccounts(address to) {
