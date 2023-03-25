@@ -23,7 +23,7 @@ const func = async (hre) => {
 	});
 
 	// function selector for the init function
-	const initSig = '__UWClasses_init(address,string)';
+	const initSig = '__UWClasses_init(address,address,string)';
 	// function signature
 	const initHex = web3.eth.abi.encodeFunctionSignature(initSig)
 		+ web3.eth.abi.encodeParameters(['address', 'address', 'string'], [UWIDProxy.address, UWArchiveProxy.address, quarterName]).substring(2);
