@@ -18,17 +18,21 @@ Non Upgradeable Versions
 
 Upgradeables
 
-"UWIDUpgradeable": "0xdE28D3DC3939696cB1A3AF579638a3Bcd200a025"
+"UWIDUpgradeable": "0xe663D1CecBe90ac21C2C48f2A899E074346De249"
 
-"UWIDProxy": "0x0dA9caF0b1884f8Ac843A348Ae396Bea28B4c003"
+"UWIDProxy": "0x79501Fa56f03aE369B97d2D2f9AE793423DBD503"
 
-"UWMajorUpgradeable": "0xC5807c25Ac779235a3D1e55d4D7b428E5033Ac60"
+"UWMajorUpgradeable": "0xcA34087565DEbeB2E973275A523561Ab7b833788"
 
-"UWCSEProxy": "0x163BBDB2e13418d170169477df62376a95ea4597"
+"UWCSEProxy": "0xF3685c462Fe7EB93147d00B29F300dfF667df3e4"
 
-"UWClassesUpgradeable": "0x99baFCbAc29Ba6D5cb5D1BbbCd51384EeD40B3f6"
+"UWClassesUpgradeable": "0x9375feAa03E0b68152E9Cb831B38C1C072257861"
 
-"UWClassesProxy": "0xc2bb81038b8b868175822a7e34c0a31E51b3fAb9"
+"UWClassesProxy": "0x89c3AdF6919159F64a0c6250bAc0f6516E06eeDe"
+
+"UWArchiveUpgradeable": "0xcb33B71d286eC0b268021d57B3B592D15f50895c"
+
+"UWArchiveProxy": "0xdFa44150e6bc2F6aE83E1314512BCF22F1406846"
 
 ```
 
@@ -58,7 +62,8 @@ token symbol: UWCSE
 * The uri function shows the class information on the UW time schedule page.
 
 
-### UWArchiveUpgradeable(ERC-1155)
+### UWArchive(ERC-1155)
+* An NFT to keep track of classes taken so far.
 * The token ID represents the course ID.
 * Student accounts that own the UWID NFT are only allowed to archive(mint) classes.
 * Transferring is not allowed.
