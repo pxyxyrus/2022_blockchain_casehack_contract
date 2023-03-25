@@ -26,7 +26,7 @@ const func = async (hre) => {
 	const initSig = '__UWClasses_init(address,string)';
 	// function signature
 	const initHex = web3.eth.abi.encodeFunctionSignature(initSig)
-		+ web3.eth.abi.encodeParameters(['address', 'address', 'string'], [UWIDProxy.address, UWArchiveProxy, quarterName]).substring(2);
+		+ web3.eth.abi.encodeParameters(['address', 'address', 'string'], [UWIDProxy.address, UWArchiveProxy.address, quarterName]).substring(2);
 
 	const proxy = await deploy(proxyName, {
 		from: deployer,
