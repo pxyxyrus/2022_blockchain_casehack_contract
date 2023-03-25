@@ -12,7 +12,7 @@ const func = async (hre) => {
 	const { deployer, simpleERC20Beneficiary } = await getNamedAccounts();
 
 	const UWIDProxy = await deployments.get("UWIDProxy");
-	const UWArchiveProxy = await deployments.sget("UWArchiveProxy");
+	const UWArchiveProxy = await deployments.get("UWArchiveProxy");
 
 	const implementation = await deploy(contractName, {
 		from: deployer,
