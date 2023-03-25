@@ -39,21 +39,24 @@ const config = {
 		hardhat: {
 			hardfork: 'merge',
 			mining: {
-				auto: false,
-				interval: 0
+				auto: true,
+				interval: 1000
 			},
 			forking: {
 				url: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
 			},
-			chainId: 1,
-			gasPrice: 0,
+			chainId: 9999,
+			gas: "auto",
+			gasPrice: 18000000000
 		},
 		goerli: {
 			url: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
 			chainId: 5,
 			accounts: [privateKey],
+			// gas: "auto",
+			// gasPrice: "auto",
 			gas: "auto",
-			gasPrice: "auto",
+			gasPrice: 18000000000
 		},
 		ethmainnet: {
 			url: "",
