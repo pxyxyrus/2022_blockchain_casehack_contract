@@ -7,9 +7,29 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155URIS
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../UWID/UWIDUpgradeable.sol";
-import "./UWClassesUpgradeable.sol";
+// import "./UWClassesUpgradeable.sol";
 import "./UWUtils.sol";
 
+
+interface IUWClassesUpgradeable {
+    function quarterEnd() external view returns (bool);
+    function quarterName() external view returns (string memory);
+    function numberOfClasses(address account) external view returns (uint256);
+    function accountClasses(address account, uint256 index) external view returns (uint256);
+    function classes(uint256) external view returns (
+        bytes32 courseId,
+        uint256 classId,
+        uint256 currentlyEnrolled,
+        uint256 enrollCapacity,
+        uint256 credits,
+        bytes30 weekdayTime,
+        bytes12 weekendTime,
+        bytes20 sectionType,
+        string memory creditType,
+        string memory courseName,
+        bytes memory data
+    );
+}
 
 
 // CourseID is bytes32 but it is also the tokenID of the ERC1155 contract
@@ -61,16 +81,16 @@ contract UWArchiveUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
 
     function _archive(address classNFTAddress, address account) internal onlyUWAccounts(account) {
         require(isUWClassNFTAddressList[classNFTAddress]);
-        require(UWClassesUpgradeable(classNFTAddress).quarterEnd());
-        string memory quarterName = UWClassesUpgradeable(classNFTAddress).quarterName();
-        uint256 classlen = UWClassesUpgradeable(classNFTAddress).numberOfClasses(account);
+        require(IUWClassesUpgradeable(classNFTAddress).quarterEnd());
+        string memory quarterName = IUWClassesUpgradeable(classNFTAddress).quarterName();
+        uint256 classlen = IUWClassesUpgradeable(classNFTAddress).numberOfClasses(account);
         uint256 i = 0;
         uint256 classId; // for less variable usage
         bytes32 courseId;
 
         for (i = 0; i < classlen; i += 1) {
-            classId = UWClassesUpgradeable(classNFTAddress).accountClasses(account, i);
-            (courseId,,,,,,,,,,) = UWClassesUpgradeable(classNFTAddress).classes(classId);
+            classId = IUWClassesUpgradeable(classNFTAddress).accountClasses(account, i);
+            (courseId,,,,,,,,,,) = IUWClassesUpgradeable(classNFTAddress).classes(classId);
             if (!accountCourseQuarterExists[account][courseId][quarterName]) {
                 accountCourseQuarterExists[account][courseId][quarterName] = true;
                 accountCourseQuarterInfo[account][courseId].push(quarterName);

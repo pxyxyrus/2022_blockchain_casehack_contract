@@ -7,10 +7,13 @@ import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155URIS
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../UWID/UWIDUpgradeable.sol";
-import "./UWArchiveUpgradeable.sol";
+// import "./UWArchiveUpgradeable.sol";
 import "./UWUtils.sol";
 
 
+interface IUWArchiveUpgradeable {
+    function accountHasTakenCourse(address account, bytes32 courseId) external view returns (bool);
+}
 
 
 
@@ -239,7 +242,7 @@ contract UWClassesUpgradeable is Initializable, OwnableUpgradeable, ERC1155Upgra
         for (i = 0; i < coursePrerequisites[courseId].length; i++) {
             meet = true;
             for (j = 0; i < coursePrerequisites[courseId][i].length; i++) {
-                if (UWArchiveUpgradeable(UWArchiveAddress).accountHasTakenCourse(account, coursePrerequisites[courseId][i][j])) {
+                if (IUWArchiveUpgradeable(UWArchiveAddress).accountHasTakenCourse(account, coursePrerequisites[courseId][i][j])) {
                     meet = false;
                     break;
                 }
